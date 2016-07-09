@@ -1,0 +1,20 @@
+{
+  "name": "app",
+  "description": "",
+  "main": "app.js",
+  "authors": [
+    "t0x3e8 <t0x3e8@gmail.com>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
