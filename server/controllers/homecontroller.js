@@ -1,16 +1,16 @@
 var homecontroller = (function () {
     'use strict';
     
-    var home = function (req, res, next) {
-        res.render('index', {title: 'This is Home page!'});
+    var index = function (req, res, next) {
+        res.render('homeindex', {title: 'This is Index page!'});
     };
 
     var about = function (req, res, next) {
-        res.render('index', {title: 'This is About page!'});
+        res.render('homeabout', {title: 'This is About page!'});
     };
 
     return {
-        'home' : home,
+        'index' : index,
         'about' : about
     };
 }());

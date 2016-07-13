@@ -1,11 +1,29 @@
 doctype html
 html
   head
+    meta(name='viewport', content='width=device-width,initial-scale=1')
     title= title
     link(rel='stylesheet', href='bower/bootstrap/dist/css/bootstrap.css')
     link(rel='stylesheet', href='bower/bootstrap/dist/css/bootstrap-theme.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    nav.navbar.navbar-default
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle.collapsed(data-toggle='collapsed', data-target="#bs-example-navbar-collapse-1", aria-expanded="false")
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand(href='/') This is your Site
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li.active
+              a(href='backend') Backend
+                span.sr-only (current)
+            li
+              a(href='about') About
+
     .container
        block content
 
