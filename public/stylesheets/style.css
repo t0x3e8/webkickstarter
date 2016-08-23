@@ -1,8 +1,16 @@
-/*body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.post-section {
+  margin-bottom: 60px;
 }
 
-a {
-  color: #00B7FF;
-}*/
+.jumbotron-image {
+  background: url('/images/block.jpg') no-repeat center center;
+}
+
+.jumbotron {
+  color: #5bc0de;
+}
+
+.editor {
+  overflow:scroll; 
+  max-height:300px;
+}

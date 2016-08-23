@@ -1,7 +1,33 @@
 extends layout
 
-block content
-  h1= title
-  p Welcome to #{title}
+block content  
+  .jumbotron.jumbotron-image
+    h1 Welcome to #{title}
+    p Some posts from the block.
 
-  button.btn.btn-default.btn-primary.col-xs-12.col-sm-6 Hi, I should be full width on mobile!
+  .col-md-11.col-md-push-1
+    each post in posts
+      .post-section
+        h1=post.title
+        p.label.label-info=post.date
+        p=post.content
+        h3 
+          u Comments
+            .badge=post.comments.length
+        hr
+        .col-md-offset-1
+          each comment in post.comments
+            p
+              strong.text-info #{comment.author} :   
+              span=comment.content
+              p.label.label-default=post.date
+          form(role='form', method='post').form-inline
+            .form-group
+              label(for='author').sr-only.control-label Author
+              input(type='text', id='author', name='author', placeholder='author').form-control
+            .form-group
+              label(for='content').sr-only.control-label Comment ....
+              input(type='text', id='content', name='content', placeholder='comment ....').form-control.col-md-6
+            .form-group
+              button(type='submit').btn.btn-default Send
+        hr

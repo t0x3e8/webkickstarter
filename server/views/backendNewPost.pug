@@ -1,0 +1,22 @@
+extends layout
+
+block content
+
+  h1 Create a new post
+  .col-md-10.col-md-push-1
+    form(role='form', method='post').form-horizontal
+      .form-group
+        label(for='title').control-label Title
+        input(type='text', id='title', name='title').form-control
+      .form-group
+        label(for='content').control-label Content
+        textarea(id='content', name='content').form-control
+      .form-group
+        label(for='date').control-label Date
+        input(type='date', id='date', name='date').form-control
+      .form-group
+        button.btn.btn-default(type='submit') submit
+    if (status === 1)
+      .alert.alert-success Saved
+    else if (status === -1)
+      .alert.alert-danger Did not save
