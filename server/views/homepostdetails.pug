@@ -1,0 +1,39 @@
+extends layout
+
+block content  
+  .jumbotron.jumbotron-image
+    h1 Welcome to #{title}
+    p Some posts from the block.
+
+  .col-md-11.col-md-push-1
+    .row
+        .post-section
+          h1= post.title
+          .glyphicon.glyphicon-time   
+          span  Posted on 
+            span= moment(post.date).format('dddd DD.MM.YYYY')
+          p !{post.content}
+          h3 
+            u Comments  
+              .badge=post.comments.length
+          hr
+          .col-md-offset-1
+            .well
+              h4 Leave comment
+              form(role='form', method='post')
+                .form-group
+                    label(for='author').sr-only.control-label Author
+                    input(type='text', id='author', name='author', placeholder='author').form-control
+                .form-group
+                    label(for='content').sr-only.control-label Comment ....
+                    textarea(rows='3', id='content', name='content', placeholder='comment ....').form-control
+                    //- input(type='text', id='content', name='content', placeholder='comment ..').form-control.col-md-6
+                .form-group
+                    button(type='submit').btn.btn-primary Submit
+            each comment in post.comments
+              .media
+                .media-body
+                  h4.media-heading=comment.author
+                  small= moment(comment.date).format('MMMM DD YYYY hh:mm A')   
+                span=comment.content
+          hr

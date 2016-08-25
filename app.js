@@ -1,6 +1,5 @@
 /* eslint no-unused-vars: ["error", { "argsIgnorePattern": "^next" }] 
 vars-on-top : 'off'*/
-
 var express = require('express');
 var path = require('path');
 // var favicon = require('serve-favicon');
@@ -16,6 +15,9 @@ var backendRoutes = require('./server/routes/backend');
 
 var app = express();
 
+// library which helps prettify Date
+app.locals.moment = require('moment');
+app.locals.underscore = require('underscore');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'server/views'));
@@ -32,7 +34,7 @@ app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/api', homeApiRoutes);
 app.use('/', homeRoutes);
-app.use('/post', backendRoutes);
+app.use('/admin', backendRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

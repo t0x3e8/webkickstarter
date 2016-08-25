@@ -6,28 +6,25 @@ block content
     p Some posts from the block.
 
   .col-md-11.col-md-push-1
-    each post in posts
-      .post-section
-        h1=post.title
-        p.label.label-info=post.date
-        p=post.content
-        h3 
-          u Comments
-            .badge=post.comments.length
-        hr
-        .col-md-offset-1
-          each comment in post.comments
-            p
-              strong.text-info #{comment.author} :   
-              span=comment.content
-              p.label.label-default=post.date
-          form(role='form', method='post').form-inline
-            .form-group
-              label(for='author').sr-only.control-label Author
-              input(type='text', id='author', name='author', placeholder='author').form-control
-            .form-group
-              label(for='content').sr-only.control-label Comment ....
-              input(type='text', id='content', name='content', placeholder='comment ....').form-control.col-md-6
-            .form-group
-              button(type='submit').btn.btn-default Send
-        hr
+    if(posts && posts.length > 0)
+      each post in posts
+        .row
+          .post-section
+            h1
+              a(href='/post/' + post._id)= post.title
+            .glyphicon.glyphicon-time   
+            span  Posted on 
+              span= moment(post.date).format('dddd DD.MM.YYYY')
+            p !{post.content}
+            h3 
+              u Comments  
+                .badge=post.comments.length
+            hr
+            //- .col-md-offset-1
+            //-   each comment in underscore.first(post.comments, 3)
+            //-     .media
+            //-       .media-body
+            //-         h4.media-heading=comment.author
+            //-         small= moment(comment.date).format('MMMM DD YYYY hh:mm A')   
+            //-       span=comment.content
+            //- hr

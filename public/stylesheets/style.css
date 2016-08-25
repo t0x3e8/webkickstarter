@@ -1,5 +1,5 @@
 .post-section {
-  margin-bottom: 60px;
+  margin-bottom: 2em;
 }
 
 .jumbotron-image {
@@ -7,10 +7,6 @@
 }
 
 .jumbotron {
-  color: #5bc0de;
-}
-
-.editor {
-  overflow:scroll; 
-  max-height:300px;
+  color: black;
+  font-weight: bolder
 }

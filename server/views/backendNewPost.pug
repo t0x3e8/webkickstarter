@@ -11,12 +11,12 @@ block content
       .form-group
         label(for='content').control-label Content
         textarea(id='content', name='content').form-control
-      .form-group
-        label(for='date').control-label Date
-        input(type='date', id='date', name='date').form-control
+      //- .form-group
+      //-   label(for='date').control-label Date
+      //-   input(type='date', id='date', name='date').form-control
       .form-group
         button.btn.btn-default(type='submit') submit
-    if (status === 1)
+    if (status === true)
       .alert.alert-success Saved
-    else if (status === -1)
+    else if (status === false)
       .alert.alert-danger Did not save

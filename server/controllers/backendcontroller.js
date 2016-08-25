@@ -1,34 +1,45 @@
 /* eslint no-unused-vars: ["error", { "argsIgnorePattern": "^next" }] */
 
-var debug = require('debug')('mean:app');
+var request = require('request');
+var config = require('config');
 
 var backendcontroller = (function () {
     'use strict';
 
-    var newPost = function (req, res, next) {
-        var status = 0;
+    var apiAddress = config.get('API.url');
 
-        if (req.method === 'POST') {
-            debug('this is POST');
-            debug(req.body);
-
-            if (req.body.title && req.body.content && req.body.date) {
-                status = 1;
-            } else { 
-                status = -1;
-            } 
-        }
-
+    var addPost = function (req, res, next) {
         res.render('backendNewPost', {
             title: 'New Post',
-            status : status,
+            status : req.addPostStatus,
             body: req.body
         });
-
     };
 
+    var doAddPost = function (req, res, next) {
+        var reqOptions = {
+            url : apiAddress + '/posts',
+            method : 'POST',
+            json : {
+                title : req.body.title,
+                content: req.body.content
+            }
+        };
+
+        request(reqOptions, function (err, response) {
+            if (!err && response.statusCode === 201) {
+                req.addPostStatus = true;     
+            } else { 
+                req.addPostStatus = false;
+            }
+
+            return next();      
+        });
+    }
+
     return {
-        'newPost' : newPost,
+        'addPost' : addPost,
+        'doAddPost' : doAddPost
     };
 }());
 
