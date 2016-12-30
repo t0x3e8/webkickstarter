@@ -1,9 +1,12 @@
 # webkickstarter
 MVC for NODE.JS kickstarter
 
-Installed features:
+FEATURES:
+- MongoDB,
 - Bower,
-- Eslint,
+- Bootstrap,
+- jQuery,
+- ESLint,
 - Pug,
 
 GET STARTED
@@ -14,3 +17,9 @@ GET STARTED
 - install mongodb if it's not installed yet, check this link https://docs.mongodb.com/manual/installation/ for more guidance 
 - run 'startMongo.bat',
 - run service by 'npm start' or with F5 in VS Code 
+
+
+ENABLE ESLINT IN VISUAL STUDIO
+
+In order to enable integration ESLint with Visual Studio Code, you need to install ESLint extension https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint. 
+Each file which was modified will be automatically run agains ESLint engine.
