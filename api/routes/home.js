@@ -22,10 +22,10 @@ router.delete('/posts/:postId', postsController.postDelete);
 - PUT    200   http://localhost/posts/1/comments/1
 - DELETE 204   http://localhost/posts/1/comments/1
 */
-router.get('/posts/:postId/comments/:commentId', postsController.commentRead);
+// router.get('/posts/:postId/comments/:commentId', postsController.commentRead);
 router.get('/posts/:postId/comments/', postsController.commentsList);
 router.post('/posts/:postId/comments/', postsController.commentCreate);
-router.put('/posts/:postId/comments/:commentId', postsController.commentUpdate);
-router.delete('/posts/:postId/comments/:commentId', postsController.commentDelete);
+// router.put('/posts/:postId/comments/:commentId', postsController.commentUpdate);
+// router.delete('/posts/:postId/comments/:commentId', postsController.commentDelete);
 
 module.exports = router;

@@ -8,7 +8,7 @@ var mongoURI = 'mongodb://localhost:27017/blog';
 
 mongoose.connect(mongoURI, function (err) {
     'use strict';
-    
+
     if (err) {
         debug('Error while connecting to database: ' + err);
     }
@@ -34,7 +34,7 @@ mongoose.connection.on('disconnected', function () {
 
 process.on('SIGINT', function () {
     'use strict';
-    
+
     debug('Mongoose connection closed due to app termination.');
     mongoose.connection.close(function () {
         process.exit(0);
@@ -43,7 +43,7 @@ process.on('SIGINT', function () {
 
 process.on('SIGNTERM', function () {
     'use strict';
-        
+
     debug('Mongoose connection closed due to Heroku service termination.');
     mongoose.connection.close(function () {
         process.exit(0);

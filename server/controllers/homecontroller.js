@@ -12,23 +12,23 @@ var homecontroller = (function () {
 
     var renderPostDetails = function (res, post) {
         res.render('homepostdetails', {
-            title: 'Jenny from the blog', 
-            post : post
+            title: 'Jenny from the blog',
+            post: post
         });
     }
 
     var renderIndex = function (res, posts) {
         res.render('homeindex', {
-            title: 'Jenny from the blog', 
-            posts : posts
+            title: 'Jenny from the blog',
+            posts: posts
         });
     }
 
     var index = function (req, res, next) {
         var reqOptions = {
-            url : apiAddress + '/posts',
-            method : 'GET',
-            json : {}
+            url: apiAddress + '/posts',
+            method: 'GET',
+            json: {}
         };
 
         request(reqOptions, function (err, response, posts) {
@@ -43,14 +43,14 @@ var homecontroller = (function () {
 
     var postDetails = function (req, res, next) {
         var reqOptions = {
-            url : apiAddress + '/posts/' + req.params.postId,
-            method : 'GET',
-            json : {}
+            url: apiAddress + '/posts/' + req.params.postId,
+            method: 'GET',
+            json: {}
         };
 
         request(reqOptions, function (err, response, post) {
             if (!err && response.statusCode === 200) {
-                renderPostDetails(res, post);                
+                renderPostDetails(res, post);
             } else if (err) {
                 res.json(err);
                 res.status(404);
@@ -60,10 +60,10 @@ var homecontroller = (function () {
 
     var addComment = function (req, res, next) {
         var reqOptions = {
-            url : apiAddress + '/posts/' + req.params.postId + '/comments',
-            method : 'POST',
-            json : {
-                author : req.body.author,
+            url: apiAddress + '/posts/' + req.params.postId + '/comments',
+            method: 'POST',
+            json: {
+                author: req.body.author,
                 content: req.body.content
             }
         };
@@ -79,14 +79,14 @@ var homecontroller = (function () {
     };
 
     var about = function (req, res, next) {
-        res.render('homeabout', {title: 'Jenny from the blog'});
+        res.render('homeabout', { title: 'Jenny from the blog' });
     };
 
     return {
-        'index' : index,
-        'about' : about,
-        'postDetails' : postDetails,
-        'addComment' : addComment
+        'index': index,
+        'about': about,
+        'postDetails': postDetails,
+        'addComment': addComment
     };
 }());
 

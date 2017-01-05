@@ -136,7 +136,10 @@
         "no-sequences": "error",
         "no-shadow": "error",
         "no-shadow-restricted-names": "error",
-        "no-spaced-func": "error",
+        "func-call-spacing": [
+            "error",
+            "never"
+        ],
         "no-sync": "error",
         "no-ternary": "error",
         "no-throw-literal": "error",
@@ -162,7 +165,7 @@
         "no-with": "error",
         "object-curly-spacing": [
             "error",
-            "never"
+            "always"
         ],
         "object-property-newline": "error",
         "object-shorthand": "off",

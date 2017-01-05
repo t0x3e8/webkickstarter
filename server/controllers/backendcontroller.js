@@ -11,35 +11,35 @@ var backendcontroller = (function () {
     var addPost = function (req, res, next) {
         res.render('backendNewPost', {
             title: 'New Post',
-            status : req.addPostStatus,
+            status: req.addPostStatus,
             body: req.body
         });
     };
 
     var doAddPost = function (req, res, next) {
         var reqOptions = {
-            url : apiAddress + '/posts',
-            method : 'POST',
-            json : {
-                title : req.body.title,
+            url: apiAddress + '/posts',
+            method: 'POST',
+            json: {
+                title: req.body.title,
                 content: req.body.content
             }
         };
 
         request(reqOptions, function (err, response) {
             if (!err && response.statusCode === 201) {
-                req.addPostStatus = true;     
-            } else { 
+                req.addPostStatus = true;
+            } else {
                 req.addPostStatus = false;
             }
 
-            return next();      
+            return next();
         });
     }
 
     return {
-        'addPost' : addPost,
-        'doAddPost' : doAddPost
+        'addPost': addPost,
+        'doAddPost': doAddPost
     };
 }());
 
