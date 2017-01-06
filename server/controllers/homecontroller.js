@@ -25,13 +25,7 @@ var homecontroller = (function () {
     }
 
     var index = function (req, res, next) {
-        var reqOptions = {
-            url: apiAddress + '/posts',
-            method: 'GET',
-            json: {}
-        };
-
-        request(reqOptions, function (err, response, posts) {
+        request.get(apiAddress + '/posts', { json : { } }, function (err, response, posts) {
             if (!err && response.statusCode === 200) {
                 renderIndex(res, posts);
             } else if (err) {

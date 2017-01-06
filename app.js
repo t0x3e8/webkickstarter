@@ -6,8 +6,13 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var debug = require('debug')('mean:app');
+var config = require('config');
 
 require('./api/models/db.js');
+
+debug('Configuration name: ' + config.get('CONFIG_NAME'));
+debug('{Process.env: }: ' + config.util.getEnv('NODE_ENV'));
 
 var homeApiRoutes = require('./api/routes/home');
 var homeRoutes = require('./server/routes/home');
@@ -27,7 +32,7 @@ app.set('view engine', 'pug');
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
@@ -40,10 +45,10 @@ app.use('/admin', backendRoutes);
 app.use(function (req, res, next) {
     'use strict';
     var err = new Error('Not Found');
-    
+
     err.status = 404;
     next(err);
-}); 
+});
 
 // error handlers
 
@@ -52,7 +57,7 @@ app.use(function (req, res, next) {
 if (app.get('env') === 'development') {
     app.use(function (err, req, res, next) {
         'use strict';
-        
+
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,

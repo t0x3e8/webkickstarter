@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha test/**/*.js"
+    "//": "there must be no space before &",
+    "test": "set NODE_ENV=test& set DEBUG=mean:*& mocha test/**/*.js --reporter spec"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
