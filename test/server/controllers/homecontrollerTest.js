@@ -9,13 +9,14 @@ var server = require('../../../app');
 var request = require('request');
 var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
+var ObjectId = require('mongodb').ObjectID;
 
 describe('Default page functionality', function () {
     var post1, post2;
 
     beforeEach(function () {
         post1 = new Post({
-            _id: '1',
+            _id: ObjectId("123412341234123412341234"),
             title: 'Post 1',
             content: 'Content of Post 1',
             comments: [{
@@ -33,7 +34,7 @@ describe('Default page functionality', function () {
         });
 
         post2 = new Post({
-            _id: '2',
+            _id: ObjectId("123412341234123412341235"),
             title: 'Post 2',
             content: 'Content of Post 2',
             comments: [],
@@ -41,27 +42,70 @@ describe('Default page functionality', function () {
         });
     });
 
-    it('Need to open default page with all available posts', sinon.test(function (done) {
+    it('Need to open default page with all available posts and links', sinon.test(function (done) {
         var getRequestStub = this.stub(request, 'get')
-            .withArgs("http://localhost:3000/api/posts", {json : { } })
-            .yields(null, {statusCode : 200}, [post1, post2]);
-        var body = {};
+            .withArgs("http://localhost:3000/api/posts", { json: {} })
+            .yields(null, { statusCode: 200 }, [post1, post2]);
 
         supertest(server)
             .get('/')
             .expect(200)
-            .expect('cache-control', 'no-cache')
             .end(function (err, res) {
-
                 expect(getRequestStub.calledOnce).to.be.true;
                 expect(res.text).to.contain('Post 1');
                 expect(res.text).to.contain('Post 2');
                 expect(res.text).to.contain('Jenny from the blog');
+                expect(res.text).to.contain('href="/admin/post/new">New Post</a>');
+                expect(res.text).to.contain('href="/about">About</a>');
+                expect(res.text).to.contain('href="/">The blog</a>');
+                expect(res.text).to.contain('href="/post/123412341234123412341234">Post 1</a>');
+                // expect(res.text).to.match(/href=\"\/post\/{1}[\d\w]{24}\">Post 1\<\/a\>/);
+                expect(res.text).to.contain('href="/post/123412341234123412341235">Post 2</a>');
+                // expect(res.text).to.match(/href=\"\/post\/{1}[\d\w]{24}\">Post 2\<\/a\>/);
+                expect(res.text).to.not.match(/href=\"\/post\/{1}[\d\w]{24}\">Post 3\<\/a\>/);
                 done();
             });
     }));
 
-    it.skip('Need to see the link to About page');
-    it.skip('Need to see the link to Post page');
-    it.skip('Need to see the link to New Post page');
+    it('Need to open About page', sinon.test(function (done) {
+        supertest(server)
+            .get('/about')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.text).to.contain('This is just an example of extremely simple blog build on the foundation of MEAN blocks');
+                done();
+            });
+    }));
+
+    it('Need to open Post 1 details page', sinon.test(function (done) {
+        var getRequestStub = this.stub(request, 'get')
+            .withArgs("http://localhost:3000/api/posts/123412341234123412341234", { json: {} })
+            .yields(null, { statusCode: 200 }, post1);
+
+        supertest(server)
+            .get('/post/123412341234123412341234')
+            .expect(200)
+            .end(function (err, res) {
+                expect(getRequestStub.calledOnce).to.be.true;
+                expect(res.text).to.contain('Post 1');
+                expect(res.text).to.contain('Content of Post 1');
+                done();
+            });
+    }));
+
+    it('Need to open Post 1 and be able to leave a new comment', sinon.test(function(done) {
+        var comment = { author: 'New Author', content : 'New comment'};
+        var postRequestStub = this.stub(request, 'post')
+            .withArgs("http://localhost:3000/api/posts/123412341234123412341234/comments", { json: comment})
+            .yields(null, { statusCode: 201 }, post1);
+        
+        supertest(server)
+            .post('/post/123412341234123412341234')
+            .send(comment)
+            .expect(201)
+            .end(function (err, res) {
+                expect(postRequestStub.calledOnce).to.be.true;
+                done();
+            });            
+    }));
 });

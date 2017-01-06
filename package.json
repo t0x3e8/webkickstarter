@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "//": "there must be no space before &",
-    "test": "set NODE_ENV=test& set DEBUG=mean:*& mocha test/**/*.js --reporter spec"
+    "testanddebug": "set NODE_ENV=test& set DEBUG=mean:*& mocha test/**/*.js --reporter spec",
+    "test": "set NODE_ENV=test& mocha test/**/*.js --reporter spec"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
