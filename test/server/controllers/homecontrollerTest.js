@@ -108,4 +108,21 @@ describe('Default page functionality', function () {
                 done();
             });            
     }));
+
+    it('Need to open Error page (404) when the comment\'s details are missing', sinon.test(function(done) {
+        var comment = { author: null, content : null};
+        var postRequestStub = this.stub(request, 'post')
+            .withArgs("http://localhost:3000/api/posts/123412341234123412341234/comments", { json: comment})
+            .yields({ error: 'New Comment must have all fields set' }, { statusCode: 403 }, null);
+        
+        supertest(server)
+            .post('/post/123412341234123412341234')
+            .send(comment)
+            .expect(403)
+            .end(function (err, res) {
+                expect(postRequestStub.calledOnce).to.be.true;
+                expect(res.statusCode).to.be.equal(404);
+                done();
+            });            
+    }));
 });

@@ -25,25 +25,28 @@ var homecontroller = (function () {
     }
 
     var index = function (req, res, next) {
-        request.get(apiAddress + '/posts', { json: {} }, function (err, response, posts) {
-            if (!err && response.statusCode === 200) {
-                renderIndex(res, posts);
-            } else if (err) {
-                res.json(err);
-                res.status(404);
+        request.get(apiAddress + '/posts', { json: {} }, function (err, response, body) {
+            if (err) {
+                res.status(404).json(err);
+            } else if (response.statusCode === 200) {
+                renderIndex(res, body);
+            } else {
+                res.status(response.statusCode).json(body);
             }
         });
     };
 
     var postDetails = function (req, res, next) {
-        request.get(apiAddress + '/posts/' + req.params.postId, { json: {} }, function (err, response, post) {
-            if (!err && response.statusCode === 200) {
-                renderPostDetails(res, post);
-            } else if (err) {
-                res.json(err);
-                res.status(404);
-            }
-        });
+        request.get(apiAddress + '/posts/' + req.params.postId, { json: {} },
+            function (err, response, body) {
+                if (err) {
+                    res.status(404).json(err);
+                } else if (response.statusCode === 200) {
+                    renderPostDetails(res, body);
+                } else {
+                    res.status(response.statusCode).json(body);
+                }
+            });
     }
 
     var addComment = function (req, res, next) {
@@ -54,12 +57,13 @@ var homecontroller = (function () {
                     content: req.body.content
                 }
             },
-            function (err, response) {
-                if (!err && response.statusCode === 201) {
+            function (err, response, body) {
+                if (err) {
+                    res.status(404).json(err);
+                } else if (response.statusCode === 201) {
                     res.redirect('/post/' + req.params.postId);
-                } else if (err) {
-                    res.json(err);
-                    res.status(404);
+                } else {
+                    res.status(response.statusCode).json(body);
                 }
             }
         );

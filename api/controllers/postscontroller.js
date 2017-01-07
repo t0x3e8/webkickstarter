@@ -1,6 +1,6 @@
 /* eslint 
     no-unused-vars: ["error", { "argsIgnorePattern": "^next" }],
-    max-statements: ["error", { "max" : 14}]
+    max-statements: ["error", { "max" : 14}],
 */
 
 var mongoose = require('mongoose');
@@ -8,9 +8,8 @@ var mongoose = require('mongoose');
 var homecontroller = (function () {
     'use strict';
 
-    var returnStatus = function (res, status, jsonData) {
-        res.status(status);
-        res.json(jsonData);
+    var returnJSON = function (res, code, data) {
+        res.status(code).json(data);
     }
 
     var Post = mongoose.model('Post');
@@ -19,26 +18,26 @@ var homecontroller = (function () {
         if (req.params && req.params.postId) {
             Post.findById(req.params.postId).exec(function (err, post) {
                 if (post) {
-                    returnStatus(res, 200, post);
+                    returnJSON(res, 200, post);
                 } else if (err) {
-                    returnStatus(res, 404, { error: err });
+                    returnJSON(res, 500, { error: err });
                 } else {
-                    returnStatus(res, 404, { error: 'Post not found' });
+                    returnJSON(res, 404, { error: 'Post not found' });
                 }
             });
         } else {
-            returnStatus(res, 404, { error: 'Missing PostId' });
+            returnJSON(res, 400, { error: 'Missing request data (PostId)' });
         }
     };
 
     var postsList = function (req, res, next) {
         Post.find().exec(function (err, posts) {
             if (posts && posts.length > 0) {
-                returnStatus(res, 200, posts);
+                returnJSON(res, 200, posts);
             } else if (err) {
-                returnStatus(res, 404, { error: err });
+                returnJSON(res, 500, { error: err });
             } else {
-                returnStatus(res, 404, []);
+                returnJSON(res, 404, { error: 'Posts not found' });
             }
         });
     };
@@ -52,13 +51,13 @@ var homecontroller = (function () {
                 comments: []
             }).exec(function (err, post) {
                 if (err) {
-                    returnStatus(res, 404, { error: err });
+                    returnJSON(res, 500, { error: err });
                 } else {
-                    returnStatus(res, 201, post);
+                    returnJSON(res, 201, post);
                 }
             });
         } else {
-            returnStatus(res, 404, { error: 'Post Title is required' });
+            returnJSON(res, 400, { error: 'Missing request data (Title)' });
         }
     };
 
@@ -76,13 +75,13 @@ var homecontroller = (function () {
 
             Post.findByIdAndUpdate(req.params.postId, newPost, { new: true }).exec(function (err, post) {
                 if (err) {
-                    returnStatus(res, 404, { error: err });
+                    returnJSON(res, 500, { error: err });
                 } else {
-                    returnStatus(res, 200, post);
+                    returnJSON(res, 200, post);
                 }
             });
         } else {
-            returnStatus(res, 404, { error: 'Missing PostId' });
+            returnJSON(res, 400, { error: 'Missing request data (PostId)' });
         }
     };
 
@@ -90,13 +89,13 @@ var homecontroller = (function () {
         if (req.params && req.params.postId) {
             Post.findByIdAndRemove(req.params.postId).exec(function (err) {
                 if (err) {
-                    returnStatus(res, 404, { error: err });
+                    returnJSON(res, 500, { error: err });
                 } else {
-                    returnStatus(res, 204, null);
+                    returnJSON(res, 204, null);
                 }
             });
         } else {
-            returnStatus(res, 404, { error: 'Missing PostId' });
+            returnJSON(res, 400, { error: 'Missing request data (PostId)' });
         }
     };
 
@@ -115,23 +114,23 @@ var homecontroller = (function () {
                             });
                             post.save(function (err2, newPost) {
                                 if (err2) {
-                                    returnStatus(res, 404, { error : err2 });
+                                    returnJSON(res, 500, { error: err2 });
                                 } else {
                                     comment = newPost.comments[post.comments.length - 1];
-                                    returnStatus(res, 201, comment);
+                                    returnJSON(res, 201, comment);
                                 }
                             });
                         } else if (err) {
-                            returnStatus(res, 404, { error: err });
+                            returnJSON(res, 500, { error: err });
                         } else {
-                            returnStatus(res, 404, { error: 'Post not found' });
+                            returnJSON(res, 404, { error: 'Post not found' });
                         }
                     });
             } else {
-                returnStatus(res, 404, { error: 'New Comment must have all fields set' });
+                returnJSON(res, 400, { error: 'Missing request data (Content Author)' });
             }
         } else {
-            returnStatus(res, 404, { error: 'Missing PostId' });
+            returnJSON(res, 400, { error: 'Missing request data (PostId)' });
         }
     };
 
@@ -142,21 +141,21 @@ var homecontroller = (function () {
                 exec(function (err, post) {
                     if (post) {
                         if (post.comments && post.comments.length > 0) {
-                            returnStatus(res, 200, {
+                            returnJSON(res, 200, {
                                 postId: req.params.postId,
                                 comments: post.comments
                             });
                         } else {
-                            returnStatus(res, 404, { error: 'No comments found' });
+                            returnJSON(res, 404, { error: 'Comments not found' });
                         }
                     } else if (err) {
-                        returnStatus(res, 404, { error: err });
+                        returnJSON(res, 500, { error: err });
                     } else {
-                        returnStatus(res, 404, { error: 'Post not found' });
+                        returnJSON(res, 404, { error: 'Post not found' });
                     }
                 });
         } else {
-            returnStatus(res, 404, { error: 'Missing PostId' });
+            returnJSON(res, 400, { error: 'Missing request data (PostId)' });
         }
     };
     // var commentRead = function (req, res, next) {
