@@ -17,16 +17,12 @@ var backendcontroller = (function () {
     };
 
     var doAddPost = function (req, res, next) {
-        var reqOptions = {
-            url: apiAddress + '/posts',
-            method: 'POST',
+        request.post(apiAddress + '/posts', {
             json: {
                 title: req.body.title,
-                content: req.body.content
+                content: req.body.content,
             }
-        };
-
-        request(reqOptions, function (err, response) {
+        }, function (err, response, body) {
             if (!err && response.statusCode === 201) {
                 req.addPostStatus = true;
             } else {
