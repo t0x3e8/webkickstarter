@@ -29,7 +29,9 @@ var homecontroller = (function () {
             if (err) {
                 res.status(404).json(err);
             } else if (response.statusCode === 200) {
-                renderIndex(res, body);
+                renderIndex(res, body);                
+            } else if (response.statusCode === 404) {
+                renderIndex(res, []);
             } else {
                 res.status(response.statusCode).json(body);
             }

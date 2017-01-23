@@ -11,7 +11,7 @@ var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
 var ObjectId = require('mongodb').ObjectID;
 
-describe('Default page functionality', function () {
+describe('Default page functionality', sinon.test(function () {
     var post1, post2;
 
     beforeEach(function () {
@@ -67,6 +67,24 @@ describe('Default page functionality', function () {
             });
     }));
 
+    it('Need to open default page when no posts available', sinon.test(function (done) {
+        var getRequestStub = this.stub(request, 'get')
+            .withArgs("http://localhost:3000/api/posts", { json: {} })
+            .yields(null, { statusCode: 404 }, '{"error":"Posts not found"}');
+
+        supertest(server)
+            .get('/')
+            .expect(200)
+            .end(function (err, res) {
+                expect(getRequestStub.calledOnce).to.be.true;
+                expect(res.text).to.contain('Jenny from the blog');
+                expect(res.text).to.contain('href="/admin/post/new">New Post</a>');
+                expect(res.text).to.contain('href="/about">About</a>');
+                expect(res.text).to.contain('href="/">The blog</a>');
+                done();
+            });
+    }));
+
     it('Need to open About page', sinon.test(function (done) {
         supertest(server)
             .get('/about')
@@ -106,7 +124,7 @@ describe('Default page functionality', function () {
             .end(function (err, res) {
                 expect(postRequestStub.calledOnce).to.be.true;
                 done();
-            });            
+            });
     }));
 
     it('Need to open Error page (404) when the comment\'s details are missing', sinon.test(function(done) {
@@ -123,6 +141,6 @@ describe('Default page functionality', function () {
                 expect(postRequestStub.calledOnce).to.be.true;
                 expect(res.statusCode).to.be.equal(404);
                 done();
-            });            
+            });       
     }));
-});
+}));
