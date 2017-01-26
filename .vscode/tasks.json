@@ -6,7 +6,7 @@
     "isShellCommand": true,
     "args": ["--no-color"],
     "tasks" : [{
-            "taskName" : "default",
+            "taskName" : "watch",
             "isBuildCommand" : true,
             "showOutput": "always",
             "isWatching": true
