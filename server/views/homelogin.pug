@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  .jumbotron.jumbotron-image
+    h1 Welcome to #{title}
+        
+  h1 Log in
+  .col-md-10.col-md-push-1
+    form(role='form', method='post').form-horizontal
+      .form-group
+        label(for='username').control-label User name:
+        input(type='text', id='username', name='username').form-control
+      .form-group
+        label(for='passport').control-label Password:
+        input(type='passport', id='passport', name='passport').form-control
+      .form-group
+        button.btn.btn-default(type='submit') login

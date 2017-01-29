@@ -74,10 +74,15 @@ var homecontroller = (function () {
     var about = function (req, res, next) {
         res.render('homeabout', { title: 'Jenny from the blog' });
     };
+    
+    var login = function (req, res, next) {
+        res.render('homelogin', { title: 'Jenny from the blog' });
+    };
 
     return {
         'index': index,
         'about': about,
+        'login' : login,
         'postDetails': postDetails,
         'addComment': addComment
     };

@@ -58,6 +58,7 @@ describe('Default page functionality', sinon.test(function () {
                 expect(res.text).to.contain('href="/admin/post/new">New Post</a>');
                 expect(res.text).to.contain('href="/about">About</a>');
                 expect(res.text).to.contain('href="/">The blog</a>');
+                expect(res.text).to.contain('href="/login">Log in</a>');
                 expect(res.text).to.contain('href="/post/123412341234123412341234">Post 1</a>');
                 // expect(res.text).to.match(/href=\"\/post\/{1}[\d\w]{24}\">Post 1\<\/a\>/);
                 expect(res.text).to.contain('href="/post/123412341234123412341235">Post 2</a>');
@@ -95,6 +96,32 @@ describe('Default page functionality', sinon.test(function () {
             });
     }));
 
+    it('Need to open Login page', sinon.test(function (done) {
+        supertest(server)
+            .get('/login')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.text).to.contain('User name:');
+                expect(res.text).to.contain('Password:');
+                done();
+            });
+    }));
+
+    it('Need to open log in with username and password', sinon.test(function (done) {
+        var loginData = { user: 'Newusername1', password: 'secretpassword' };
+        var agent = supertest.agent(server);
+
+        agent
+            .post('/login')
+            .send(loginData)
+            .expect(302)
+            .expect('Location', '/')
+            .end(function (err, res) {
+                if (err) return done(err);
+                return done();
+            });
+    }));
+
     it('Need to open Post 1 details page', sinon.test(function (done) {
         var getRequestStub = this.stub(request, 'get')
             .withArgs("http://localhost:3000/api/posts/123412341234123412341234", { json: {} })
@@ -111,12 +138,12 @@ describe('Default page functionality', sinon.test(function () {
             });
     }));
 
-    it('Need to open Post 1 and be able to leave a new comment', sinon.test(function(done) {
-        var comment = { author: 'New Author', content : 'New comment'};
+    it('Need to open Post 1 and be able to leave a new comment', sinon.test(function (done) {
+        var comment = { author: 'New Author', content: 'New comment' };
         var postRequestStub = this.stub(request, 'post')
-            .withArgs("http://localhost:3000/api/posts/123412341234123412341234/comments", { json: comment})
+            .withArgs("http://localhost:3000/api/posts/123412341234123412341234/comments", { json: comment })
             .yields(null, { statusCode: 201 }, post1);
-        
+
         supertest(server)
             .post('/post/123412341234123412341234')
             .send(comment)
@@ -127,12 +154,12 @@ describe('Default page functionality', sinon.test(function () {
             });
     }));
 
-    it('Need to open Error page (404) when the comment\'s details are missing', sinon.test(function(done) {
-        var comment = { author: null, content : null};
+    it('Need to open Error page (404) when the comment\'s details are missing', sinon.test(function (done) {
+        var comment = { author: null, content: null };
         var postRequestStub = this.stub(request, 'post')
-            .withArgs("http://localhost:3000/api/posts/123412341234123412341234/comments", { json: comment})
+            .withArgs("http://localhost:3000/api/posts/123412341234123412341234/comments", { json: comment })
             .yields({ error: 'New Comment must have all fields set' }, { statusCode: 404 }, null);
-        
+
         supertest(server)
             .post('/post/123412341234123412341234')
             .send(comment)
@@ -141,6 +168,6 @@ describe('Default page functionality', sinon.test(function () {
                 expect(postRequestStub.calledOnce).to.be.true;
                 expect(res.statusCode).to.be.equal(404);
                 done();
-            });       
+            });
     }));
 }));
