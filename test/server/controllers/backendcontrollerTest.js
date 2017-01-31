@@ -44,7 +44,7 @@ describe('Backend page functionality', function () {
 
     it('Need to open add new post page', sinon.test(function (done) {
         supertest(server)
-            .get('/admin/post/new')
+            .get('/account/post/new')
             .expect(200)
             .end(function (err, res) {
                 expect(res.text).to.contain('<title>New Post</title>');
@@ -58,10 +58,10 @@ describe('Backend page functionality', function () {
         var newPost = { title: 'New Post', content: 'New Content' };
         var postRequestStub = this.stub(request, 'post')
             .withArgs("http://localhost:3000/api/posts", { json: newPost })
-            .yields(null, {statusCode :201}, newPost);
+            .yields(null, { statusCode: 201 }, newPost);
 
         supertest(server)
-            .post('/admin/post/new')
+            .post('/account/post/new')
             .send(newPost)
             .expect(201)
             .end(function (err, res) {
@@ -76,10 +76,10 @@ describe('Backend page functionality', function () {
         var newPost = { title: '', content: '' };
         var postRequestStub = this.stub(request, 'post')
             .withArgs("http://localhost:3000/api/posts", { json: newPost })
-            .yields(null, {statusCode : 400}, { error: 'Missing request data (Title)' });
+            .yields(null, { statusCode: 400 }, { error: 'Missing request data (Title)' });
 
         supertest(server)
-            .post('/admin/post/new')
+            .post('/account/post/new')
             .send(newPost)
             .expect(400)
             .end(function (err, res) {
@@ -87,6 +87,59 @@ describe('Backend page functionality', function () {
                 expect(res.text).to.not.contain('Saved');
                 expect(res.text).to.contain('Did not save');
                 done();
+            });
+    }));
+
+    it('Need to open Login page', sinon.test(function (done) {
+        supertest(server)
+            .get('/account/login')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.text).to.contain('User name:');
+                expect(res.text).to.contain('Password:');
+                done();
+            });
+    }));
+
+    it('Need to open Register page', sinon.test(function (done) {
+        supertest(server)
+            .get('/account/register')
+            .expect(200)
+            .end(function (err, res) {
+                expect(res.text).to.contain('User name:');
+                expect(res.text).to.contain('Password:');
+                expect(res.text).to.contain('Retype password:');
+                done();
+            });
+    }));
+
+    it.skip('Need to log in an user with email and password', sinon.test(function (done) {
+        var userData = { user: 'Newusername1', password: 'secretpassword' };
+        var agent = supertest.agent(server);
+
+        agent
+            .post('/account/login')
+            .send(userData)
+            .expect(302)
+            .expect('Location', '/')
+            .end(function (err, res) {
+                if (err) return done(err);
+                return done();
+            });
+    }));
+
+    it.skip('Need to register a new user with email, password and retyped password', sinon.test(function (done) {
+        var userData = { user: 'Newusername1', password: 'secretpassword' };
+        var agent = supertest.agent(server);
+
+        agent
+            .post('/account/register')
+            .send(userData)
+            .expect(302)
+            .expect('Location', '/')
+            .end(function (err, res) {
+                if (err) return done(err);
+                return done();
             });
     }));
 });

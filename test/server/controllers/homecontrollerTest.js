@@ -55,10 +55,11 @@ describe('Default page functionality', sinon.test(function () {
                 expect(res.text).to.contain('Post 1');
                 expect(res.text).to.contain('Post 2');
                 expect(res.text).to.contain('Jenny from the blog');
-                expect(res.text).to.contain('href="/admin/post/new">New Post</a>');
+                expect(res.text).to.contain('href="/account/post/new">New Post</a>');
                 expect(res.text).to.contain('href="/about">About</a>');
                 expect(res.text).to.contain('href="/">The blog</a>');
-                expect(res.text).to.contain('href="/login">Log in</a>');
+                expect(res.text).to.contain('href="/account/login">Log in</a>');
+                expect(res.text).to.contain('href="/account/register">Register</a>');
                 expect(res.text).to.contain('href="/post/123412341234123412341234">Post 1</a>');
                 // expect(res.text).to.match(/href=\"\/post\/{1}[\d\w]{24}\">Post 1\<\/a\>/);
                 expect(res.text).to.contain('href="/post/123412341234123412341235">Post 2</a>');
@@ -79,7 +80,7 @@ describe('Default page functionality', sinon.test(function () {
             .end(function (err, res) {
                 expect(getRequestStub.calledOnce).to.be.true;
                 expect(res.text).to.contain('Jenny from the blog');
-                expect(res.text).to.contain('href="/admin/post/new">New Post</a>');
+                expect(res.text).to.contain('href="/account/post/new">New Post</a>');
                 expect(res.text).to.contain('href="/about">About</a>');
                 expect(res.text).to.contain('href="/">The blog</a>');
                 done();
@@ -93,32 +94,6 @@ describe('Default page functionality', sinon.test(function () {
             .end(function (err, res) {
                 expect(res.text).to.contain('This is just an example of extremely simple blog build on the foundation of MEAN blocks');
                 done();
-            });
-    }));
-
-    it('Need to open Login page', sinon.test(function (done) {
-        supertest(server)
-            .get('/login')
-            .expect(200)
-            .end(function (err, res) {
-                expect(res.text).to.contain('User name:');
-                expect(res.text).to.contain('Password:');
-                done();
-            });
-    }));
-
-    it('Need to open log in with username and password', sinon.test(function (done) {
-        var loginData = { user: 'Newusername1', password: 'secretpassword' };
-        var agent = supertest.agent(server);
-
-        agent
-            .post('/login')
-            .send(loginData)
-            .expect(302)
-            .expect('Location', '/')
-            .end(function (err, res) {
-                if (err) return done(err);
-                return done();
             });
     }));
 

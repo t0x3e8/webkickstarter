@@ -8,6 +8,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var debug = require('debug')('mean:app');
 var config = require('config');
+var session = require('express-session');
+var passport = require('passport');
 
 require('./api/models/db.js');
 
@@ -19,6 +21,12 @@ var homeRoutes = require('./server/routes/home');
 var backendRoutes = require('./server/routes/backend');
 
 var app = express();
+
+// set up required for passport.js authentication
+app.use(session({ secret : ' thisIsMySecre4' }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // library which helps prettify Date
 app.locals.moment = require('moment');
@@ -39,7 +47,7 @@ app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
 
 app.use('/api', homeApiRoutes);
 app.use('/', homeRoutes);
-app.use('/admin', backendRoutes);
+app.use('/account', backendRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

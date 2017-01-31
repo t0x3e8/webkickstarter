@@ -5,8 +5,12 @@
 var mongoose = require('mongoose');
 var debug = require('debug')('mean:db');
 var mongoURI = 'mongodb://localhost:27017/blog';
+var bluebird = require('bluebird');
+var options = { 
+    // promiseLibrary: bluebird 
+};
 
-mongoose.connect(mongoURI, function (err) {
+mongoose.connect(mongoURI, options, function (err) {
     'use strict';
 
     if (err) {
@@ -50,4 +54,6 @@ process.on('SIGNTERM', function () {
     });
 });
 
+mongoose.Promise = bluebird;
 require('./posts');
+require('./users');

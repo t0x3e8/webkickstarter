@@ -33,9 +33,19 @@ var backendcontroller = (function () {
         });
     }
 
+    var login = function (req, res, next) {
+        res.render('backendlogin', { title: 'Jenny from the blog' });
+    };
+    
+    var register = function (req, res, next) {
+        res.render('backendregister', { title: 'Jenny from the blog' });
+    };
+
     return {
         'addPost': addPost,
-        'doAddPost': doAddPost
+        'doAddPost': doAddPost,
+        'login' : login,
+        'register' : register
     };
 }());
 
