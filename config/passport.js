@@ -19,13 +19,12 @@ var signupUser = function (req, email, password, done) {
                 newUser.local.email = email;
                 newUser.local.passport = newUser.generateHash(passport);
 
-                newUser.save(function (err) {
-                    if (err) {
+                newUser.save().
+                    then(function (savedUser) {
+                        return done(null, savedUser, null);
+                    }, function (err) {
                         throw err;
-                    }
-
-                    return done(null, newUser, null);
-                });
+                    });
 
                 return done(null, null, null);
             }, function (err) {
@@ -51,7 +50,7 @@ var loginUser = function (req, email, password, done) {
 
                 return done(null, user, null);
             }, function (err) {
-                return done({ error: err }, null, null);
+                return done({ error: err.message }, null, null);
             });
     });
 };

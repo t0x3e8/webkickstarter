@@ -1,3 +1,5 @@
+/* eslint no-sync: "off"*/
+
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 var UserSchema = null;
@@ -21,14 +23,14 @@ UserSchema = mongoose.Schema({
 UserSchema.methods.generateHash = function (password) {
     'use strict'
 
-    return bcrypt.hash(password, bcrypt.genSalt(10), null);
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 
 UserSchema.methods.validPassword = function (password) {
     'use strict'
-
-    return bcrypt.compare(password, this.local.password);
+    
+    return bcrypt.compareSync(password, this.local.password);
 };
 
 module.exports = mongoose.model('User', UserSchema);
