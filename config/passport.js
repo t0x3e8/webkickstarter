@@ -8,27 +8,44 @@ var signupUser = function (req, email, password, done) {
     'use strict'
 
     process.nextTick(function () {
-        User.findOne({ 'local.email': email }).
+        if (!passport || password === '') {
+            return done(null, null, { err: 'Password is too weak' });
+        }
+
+        return User.findOne({ 'local.email': email }).
             exec().
             then(function (user) {
                 if (user) {
                     return done(null, null, { err: 'Email already exists' });
                 }
+
                 newUser = new User();
 
                 newUser.local.email = email;
                 newUser.local.passport = newUser.generateHash(passport);
 
-                newUser.save().
-                    then(function (savedUser) {
+                return newUser.save(function (err, savedUser) {
+                    if (savedUser) {
                         return done(null, savedUser, null);
-                    }, function (err) {
-                        throw err;
-                    });
+                    }
 
-                return done(null, null, null);
+                    if (err) {
+                        return done(err, null, null);
+                    }
+
+                    return done(null, null, null);
+                });
+
+                // SAVE AS PROMISE - does not work !!!!
+                // newUser.save().
+                //     then(function (savedUser) {
+                //         return done(null, savedUser, null);
+                //     }, function (err) {
+                //         throw err;
+                //     });
+
             }, function (err) {
-                return done({ error: err });
+                return done({ error: err.message }, null, null);
             });
     });
 };

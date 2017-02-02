@@ -100,18 +100,18 @@ describe('TDD for config\\passport::', function () {
     });
 
     describe('Need to be able to SignUp::', function () {
-        it.skip('should signup a new user, if the users does not exist already', sinon.test(function (done) {
+        it('should signup a new user, if the users does not exist already', sinon.test(function (done) {
             UserMock.
                 expects('findOne').withArgs(sinon.match.any).
                 once().
                 chain('exec').
                 resolves(null);
-
-            var saveStub = sinon.stub(new User() , 'save').
-                withArgs(sinon.match.any).
-                returns({then: function () {
-                    return loggedUser;
-                }});
+            
+            // var saveStub = sinon.stub(User.prototype, 'save').resolves(loggedUser);
+            var saveStub = sinon.stub(User.prototype, 'save', function (cb) 
+            {
+                cb(null, loggedUser)
+            });
 
             configPassport.signupUser(null, 'testuser@gmail.com', 'don\'t_tell_anyone',
                 function (err, user, msg) {
@@ -120,35 +120,86 @@ describe('TDD for config\\passport::', function () {
                     expect(msg).to.be.null;
                     expect(err).to.be.null;
 
+                    saveStub.restore();
                     done();
                 });
         }));
-
-        it.skip('should return a message that user already exist if the email was already used', sinon.test(function (done) {
+        
+        it('should signup a new user, if the users does not exist already, but with save error', sinon.test(function (done) {
             UserMock.
                 expects('findOne').withArgs(sinon.match.any).
                 once().
                 chain('exec').
                 resolves(null);
+                
+            // SAVE AS PROMISE - does not work !!!!
+            // var saveStub = sinon.stub(User.prototype, 'save').resolves(loggedUser);
+            var saveStub = sinon.stub(User.prototype, 'save', function (cb) 
+            {
+                cb('Error happened', null)
+            });
 
             configPassport.signupUser(null, 'testuser@gmail.com', 'don\'t_tell_anyone',
                 function (err, user, msg) {
-                    expect(user).to.not.be(null);
-                    expect(JSON.stringify(msg)).to.contain('Email already existes');
+                    sinon.assert.calledOnce(saveStub);
+                    expect(user).to.be.null;
+                    expect(msg).to.be.null;
+                    expect(err).to.not.be.null;
+
+                    saveStub.restore();
+                    done();
+                });
+        }));
+
+        it('should return a message that user already exist if the email was already used', sinon.test(function (done) {
+            UserMock.
+                expects('findOne').withArgs(sinon.match.any).
+                once().
+                chain('exec').
+                resolves(loggedUser);
+
+            configPassport.signupUser(null, 'testuser@gmail.com', 'don\'t_tell_anyone',
+                function (err, user, msg) {
+                    expect(user).to.be.null;
+                    expect(JSON.stringify(msg)).to.contain('Email already exists');
                     expect(err).to.be.null;
 
                     done();
                 });
         }));
 
-        it.skip('should return a message that password is too weak', sinon.test(function () {
+        it('should return a message that password is too weak', sinon.test(function () {
+            UserMock.
+                expects('findOne').withArgs(sinon.match.any).
+                once().
+                chain('exec').
+                resolves(loggedUser);
 
+            configPassport.signupUser(null, 'testuser@gmail.com', '',
+                function (err, user, msg) {
+                    expect(user).to.be.null;
+                    expect(JSON.stringify(msg)).to.contain('Password is too weak');
+                    expect(err).to.be.null;
+
+                    done();
+                });
         }));
 
-        it.skip('should return an error when it occurs', sinon.test(function () {
+        it('should return an error when it occurs', sinon.test(function (done) {
+            UserMock.
+                expects('findOne').withArgs(sinon.match.any).
+                once().
+                chain('exec').
+                rejects('Error happened');
 
+            configPassport.signupUser(null, 'testuser@gmail.com', 'don\'t_tell_anyone',
+                function (err, user, msg) {
+                    expect(user).to.be.null;
+                    expect(msg).to.be.null;
+                    expect(JSON.stringify(err)).to.contain('Error happened');
+
+                    done();
+                });
         }));
-
-        it.skip('')
     });
 });
