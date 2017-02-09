@@ -1,7 +1,8 @@
 /* eslint-disable */
 
 require('../../api/models/db.js');
-var configPassport = require('../../config/passport');
+var passport = require('passport');
+var configPassport = require('../../config/passportConfig')(passport);
 var expect = require('chai').expect;
 var sinon = require('sinon');
 var mongoose = require('mongoose');
@@ -9,7 +10,7 @@ var Bluebird = require('bluebird');
 require('sinon-as-promised')(Bluebird);
 require('sinon-mongoose');
 
-describe('TDD for config\\passport::', function () {
+describe('TDD for config\\passportConfig::', function () {
     var User = mongoose.model('User');
     var loggedUser = null;
     var UserMock = null;
@@ -168,7 +169,7 @@ describe('TDD for config\\passport::', function () {
                 });
         }));
 
-        it('should return a message that password is too weak', sinon.test(function () {
+        it('should return a message that password is too weak', sinon.test(function (done) {
             UserMock.
                 expects('findOne').withArgs(sinon.match.any).
                 once().

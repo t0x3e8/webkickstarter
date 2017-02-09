@@ -56,4 +56,3 @@ process.on('SIGNTERM', function () {
 
 mongoose.Promise = bluebird;
 require('./posts');
-require('./users');

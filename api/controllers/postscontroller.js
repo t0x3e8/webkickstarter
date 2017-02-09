@@ -5,7 +5,7 @@
 
 var mongoose = require('mongoose');
 
-var homecontroller = (function () {
+var postscontroller = (function () {
     'use strict';
 
     var returnJSON = function (res, code, data) {
@@ -29,6 +29,26 @@ var homecontroller = (function () {
             returnJSON(res, 400, { error: 'Missing request data (PostId)' });
         }
     };
+
+    // var postRead = function (req, res, next) {
+    //     if (req.params && req.params.postId) {
+    //         Post.findById(req.params.postId).
+    //             exec().
+    //             then(function (post) {
+    //                 if (post) {
+    //                     returnJSON(res, 200, post);
+    //                 } else {
+    //                     returnJSON(res, 404, { error: 'Post not found' });
+    //                 }
+    //             }, function (err) {
+    //                 if (err) {
+    //                     returnJSON(res, 500, { error: err });
+    //                 }
+    //             });
+    //     } else {
+    //         returnJSON(res, 400, { error: 'Missing request data (PostId)' });
+    //     }
+    // };
 
     var postsList = function (req, res, next) {
         Post.find().exec(function (err, posts) {
@@ -287,4 +307,4 @@ var homecontroller = (function () {
     };
 }());
 
-module.exports = homecontroller;  
+module.exports = postscontroller;  

@@ -1,15 +1,15 @@
-/* eslint no-unused-vars: ["error", { "argsIgnorePattern": "^next" }] */
+/* eslint no-unused-vars: ["error", { "argsIgnorePattern": "^next|^body|^res" }] */
 
 var request = require('request');
 var config = require('config');
 
-var backendcontroller = (function () {
+var backendcontroller = function () {
     'use strict';
 
     var apiAddress = config.get('API.url');
 
     var addPost = function (req, res, next) {
-        res.render('backendNewPost', {
+        res.render('backendnewpost', {
             title: 'New Post',
             status: req.addPostStatus,
             body: req.body
@@ -36,17 +36,37 @@ var backendcontroller = (function () {
     var login = function (req, res, next) {
         res.render('backendlogin', { title: 'Jenny from the blog' });
     };
-    
+
+    var logout = function (req, res) {
+        req.logout();
+        res.redirect('/');
+    }
+
     var register = function (req, res, next) {
         res.render('backendregister', { title: 'Jenny from the blog' });
     };
 
+    // passport.authenticate('local-signup', {}, function (err, user, msg) {
+    //     if (err) {
+    //         return next(err);
+    //     }
+
+    //     if (user) {
+    //         req.login(user, function (loginError) {
+    //             return next(loginError);
+    //         });
+    //     }
+
+    //     return res.status(404).send(msg);
+    // });
+
     return {
         'addPost': addPost,
         'doAddPost': doAddPost,
-        'login' : login,
-        'register' : register
+        'login': login,
+        'register': register,
+        'logout': logout
     };
-}());
+};
 
 module.exports = backendcontroller;  

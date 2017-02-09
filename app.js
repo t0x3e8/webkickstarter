@@ -1,5 +1,7 @@
-/* eslint no-unused-vars: ["error", { "argsIgnorePattern": "^next" }] 
-vars-on-top : 'off'*/
+/* eslint 
+    no-unused-vars: ["error", { "argsIgnorePattern": "^next" }] 
+*/
+
 var express = require('express');
 var path = require('path');
 // var favicon = require('serve-favicon');
@@ -10,44 +12,45 @@ var debug = require('debug')('mean:app');
 var config = require('config');
 var session = require('express-session');
 var passport = require('passport');
+var app = express();
 
-require('./api/models/db.js');
-
+// CONFIGURATION LOGING
 debug('Configuration name: ' + config.get('CONFIG_NAME'));
 debug('{Process.env: }: ' + config.util.getEnv('NODE_ENV'));
 
-var homeApiRoutes = require('./api/routes/home');
-var homeRoutes = require('./server/routes/home');
-var backendRoutes = require('./server/routes/backend');
+// DATABASE INITIALIZATION
+require('./api/models/db.js');
 
-var app = express();
+// uncomment after placing your favicon in /public
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({
+    secret: 'thisIsMySecre4',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(logger('dev'));
+app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
 
-// set up required for passport.js authentication
-app.use(session({ secret : ' thisIsMySecre4' }));
-app.use(passport.initialize());
-app.use(passport.session());
-
-
+// VIEW ENGINE SETUP
+app.set('views', path.join(__dirname, 'server/views'));
+app.set('view engine', 'pug');
 // library which helps prettify Date
 app.locals.moment = require('moment');
 app.locals.underscore = require('underscore');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'server/views'));
-app.set('view engine', 'pug');
+// AUTHENTICATION
+require('./config/passportConfig')(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 
-// uncomment after placing your favicon in /public
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower', express.static(path.join(__dirname, 'bower_components')));
-
-app.use('/api', homeApiRoutes);
-app.use('/', homeRoutes);
-app.use('/account', backendRoutes);
+// ROUTING
+app.use('/api', require('./api/routes/home')(express.Router()));
+app.use('/', require('./server/routes/home')(express.Router()));
+app.use('/account', require('./server/routes/account')(express.Router(), passport));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
