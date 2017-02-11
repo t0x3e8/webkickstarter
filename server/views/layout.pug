@@ -24,7 +24,7 @@ html
               a(href='/account/post/new') New Post
             li
               a(href='/about') About
-            if req.user
+            if user
               li 
                 a(href='/account/logout') Log out
             else

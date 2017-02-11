@@ -48,6 +48,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ROUTING
+app.use(function (req, res, next) {
+    'use strict'
+
+    res.locals.user = req.user;
+    next();
+})
 app.use('/api', require('./api/routes/home')(express.Router()));
 app.use('/', require('./server/routes/home')(express.Router()));
 app.use('/account', require('./server/routes/account')(express.Router(), passport));
