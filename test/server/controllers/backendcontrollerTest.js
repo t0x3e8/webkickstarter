@@ -120,6 +120,7 @@ describe('Backend page functionality', function () {
             .get('/account/register')
             .expect(200)
             .end(function (err, res) {
+                expect(res.text).to.contain('Display name:');
                 expect(res.text).to.contain('Email:');
                 expect(res.text).to.contain('Password:');
                 expect(res.text).to.contain('Retype password:');
@@ -136,7 +137,7 @@ describe('Backend page functionality', function () {
 
         supertest.agent(server)
             .post('/account/login')
-            .send({ password : 'don\'t_tell_anyone', email: 'email@gmail.com' })
+            .send({ password : 'don\'t_tell_anyone', password2 : 'don\'t_tell_anyone', email: 'email@gmail.com' })
             .expect(302)
             .expect('Location', '/')
             .end(function (err, res) {
@@ -162,7 +163,7 @@ describe('Backend page functionality', function () {
 
         supertest.agent(server)
             .post('/account/register')
-            .send({ password : 'secretpassword', email: 'email@gmail.com' })
+            .send({ password : 'secretpassword', password2 : 'secretpassword', email: 'email@gmail.com', username : 'user name' })
             .expect(302)
             .expect('Location', '/')
             .end(function (err, res) {

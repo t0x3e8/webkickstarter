@@ -8,12 +8,14 @@ var accountRouting = function (router, passport) {
     router.get('/login', backendController.login);
     router.post('/login', passport.authenticate('local-login', {
         successRedirect: '/',
-        failureRedirect: '/account/login'
+        failureRedirect: '/account/login',
+        failureFlash: true
     }));
     router.get('/register', backendController.register);
     router.post('/register', passport.authenticate('local-signup', {
         successRedirect: '/',
-        failureRedirect: '/account/register'
+        failureRedirect: '/account/register',
+        failureFlash: true
     }));
     router.get('/logout', backendController.logout);
 

@@ -10,6 +10,7 @@ UserSchema = new mongoose.Schema({
             type : String,
             unique : true
         },
+        username : String,
         password : String
     },
     // google : {

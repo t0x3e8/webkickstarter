@@ -24,8 +24,12 @@ html
               a(href='/account/post/new') New Post
             li
               a(href='/about') About
-            if user
-              li 
+          ul.nav.navbar-nav.navbar-right
+            if email
+              if username
+                li
+                  p.navbar-text Logged in as <strong>#{username}</strong>
+              li
                 a(href='/account/logout') Log out
             else
               li

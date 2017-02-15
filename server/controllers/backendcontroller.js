@@ -34,7 +34,7 @@ var backendcontroller = function () {
     }
 
     var login = function (req, res, next) {
-        res.render('backendlogin', { title: 'Jenny from the blog' });
+        res.render('backendlogin', { title: 'Jenny from the blog', message: req.flash('msg'), error: req.flash('err') });
     };
 
     var logout = function (req, res) {
@@ -43,7 +43,7 @@ var backendcontroller = function () {
     }
 
     var register = function (req, res, next) {
-        res.render('backendregister', { title: 'Jenny from the blog' });
+        res.render('backendregister', { title: 'Jenny from the blog', message: req.flash('msg'), error: req.flash('err')  });
     };
 
     // passport.authenticate('local-signup', {}, function (err, user, msg) {

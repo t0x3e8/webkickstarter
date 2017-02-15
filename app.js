@@ -13,6 +13,7 @@ var config = require('config');
 var session = require('express-session');
 var passport = require('passport');
 var app = express();
+var flash = require('connect-flash');
 
 // CONFIGURATION LOGING
 debug('Configuration name: ' + config.get('CONFIG_NAME'));
@@ -46,12 +47,19 @@ app.locals.underscore = require('underscore');
 require('./config/passportConfig')(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 // ROUTING
 app.use(function (req, res, next) {
     'use strict'
 
-    res.locals.user = req.user;
+    res.locals.username = res.locals.email = null;
+
+    if (req.user && req.user.local) {
+        res.locals.username = req.user.local.username;
+        res.locals.email = req.user.local.email;
+    }
+
     next();
 })
 app.use('/api', require('./api/routes/home')(express.Router()));
