@@ -34,7 +34,11 @@ var backendcontroller = function () {
     }
 
     var login = function (req, res, next) {
-        res.render('backendlogin', { title: 'Jenny from the blog', message: req.flash('msg'), error: req.flash('err') });
+        res.render('backendlogin', {
+            title: 'Jenny from the blog',
+            message: req.flash('msg'),
+            error: req.flash('err')
+        });
     };
 
     var logout = function (req, res) {
@@ -43,8 +47,20 @@ var backendcontroller = function () {
     }
 
     var register = function (req, res, next) {
-        res.render('backendregister', { title: 'Jenny from the blog', message: req.flash('msg'), error: req.flash('err')  });
+        res.render('backendregister', {
+            title: 'Jenny from the blog',
+            message: req.flash('msg'),
+            error: req.flash('err')
+        });
     };
+
+    var ensureAuthentication = function (req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        } else {
+            return res.redirect('/login');
+        }
+    }
 
     // passport.authenticate('local-signup', {}, function (err, user, msg) {
     //     if (err) {
@@ -65,7 +81,8 @@ var backendcontroller = function () {
         'doAddPost': doAddPost,
         'login': login,
         'register': register,
-        'logout': logout
+        'logout': logout,
+        'ensureAuthentication' : ensureAuthentication
     };
 };
 
