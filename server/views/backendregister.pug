@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .jumbotron.jumbotron-image
+    h1 Welcome to #{title}
+        
+  h1 Log in
+  .col-md-10.col-md-push-1
+    form(role='form', method='post').form-horizontal
+      if error.length > 0
+        div.alert.alert-danger #{error}
+      if message.length > 0
+        div.alert.alert-warning #{message}
+      .form-group
+        label(for='username').control-label Display name:
+        input(type='text', id='username', name='username').form-control
+      .form-group
+        label(for='email').control-label Email:
+        input(type='text', id='email', name='email').form-control
+      .form-group
+        label(for='password').control-label Password:
+        input(type='password', id='password', name='password').form-control
+      .form-group
+        label(for='passport2').control-label Retype password:
+        input(type='password', id='password2', name='password2').form-control
+      .form-group
+        button.btn.btn-default(type='submit') Register

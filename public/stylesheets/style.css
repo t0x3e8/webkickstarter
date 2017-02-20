@@ -8,3 +8,12 @@
   color: black;
   font-weight: bolder;
 }
+@media (max-width: 767px) {
+  p.navbar-text {
+    margin: 0;
+    padding: 10px 15px;
+  }
+  .navbar li {
+    overflow: hidden;
+  }
+}

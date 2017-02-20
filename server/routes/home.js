@@ -1,11 +1,13 @@
-var express = require('express');
-var router = express.Router();
-var homeController = require('../controllers/homecontroller');
+module.exports = function (router) {
+    'use strict'
 
-/* GET home page. */
-router.get('/', homeController.index);
-router.get('/post/:postId', homeController.postDetails);
-router.post('/post/:postId', homeController.addComment);
-router.get('/about', homeController.about);
+    var homeController = require('../controllers/homecontroller');
 
-module.exports = router;
+    /* GET home page. */
+    router.get('/', homeController.index);
+    router.get('/post/:postId', homeController.postDetails);
+    router.post('/post/:postId', homeController.addComment);
+    router.get('/about', homeController.about);
+
+    return router;
+}

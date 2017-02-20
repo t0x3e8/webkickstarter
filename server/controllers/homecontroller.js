@@ -74,7 +74,7 @@ var homecontroller = (function () {
     var about = function (req, res, next) {
         res.render('homeabout', { title: 'Jenny from the blog' });
     };
-
+    
     return {
         'index': index,
         'about': about,
