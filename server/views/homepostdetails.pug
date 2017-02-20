@@ -21,9 +21,10 @@ block content
             .well
               h4 Leave comment
               form(role='form', method='post')
-                .form-group
-                    label(for='author').sr-only.control-label Author
-                    input(type='text', id='author', name='author', placeholder='author').form-control
+                if !email
+                  .form-group
+                      label(for='author').sr-only.control-label Author
+                      input(type='text', id='author', name='author', placeholder='author').form-control
                 .form-group
                     label(for='content').sr-only.control-label Comment ....
                     textarea(rows='3', id='content', name='content', placeholder='comment ....').form-control

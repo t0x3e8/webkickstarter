@@ -57,9 +57,9 @@ var backendcontroller = function () {
     var ensureAuthentication = function (req, res, next) {
         if (req.isAuthenticated()) {
             return next();
-        } else {
-            return res.redirect('/login');
         }
+
+        return res.redirect(302, '/account/login');
     }
 
     // passport.authenticate('local-signup', {}, function (err, user, msg) {

@@ -51,29 +51,30 @@ var postscontroller = (function () {
     // };
 
     var postsList = function (req, res, next) {
-        Post.find().exec(function (err, posts) {
-            if (posts && posts.length > 0) {
-                returnJSON(res, 200, posts);
-            } else if (err) {
-                returnJSON(res, 500, { error: err });
-            } else {
-                returnJSON(res, 404, { error: 'Posts not found' });
-            }
-        });
+        Post.find().sort({ 'date': -1 }).
+            exec(function (err, posts) {
+                if (posts && posts.length > 0) {
+                    returnJSON(res, 200, posts);
+                } else if (err) {
+                    returnJSON(res, 500, { error: err });
+                } else {
+                    returnJSON(res, 404, { error: 'Posts not found' });
+                }
+            });
     };
 
     var postCreate = function (req, res, next) {
         if (req.body && req.body.title) {
-            Post.create({
+            new Post({
                 title: req.body.title,
                 content: req.body.content,
                 date: Date.now(),
                 comments: []
-            }).exec(function (err, post) {
-                if (err) {
-                    returnJSON(res, 500, { error: err });
-                } else {
+            }).save(function (err, post) {
+                if (post) {
                     returnJSON(res, 201, post);
+                } else {
+                    returnJSON(res, 500, { error: err });
                 }
             });
         } else {

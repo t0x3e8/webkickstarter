@@ -99,9 +99,13 @@ module.exports = function (passport) {
     });
 
     passport.deserializeUser(function (id, done) {
-        User.findById(id, function (err, user) {
-            done(err, user);
-        });
+        User.findById(id).
+            exec().
+            then(function (user) {
+                done(null, user);
+            }, function (err) {
+                done(err);
+            });
     });
 
     passport.use('local-signup', new LocalStrategy({

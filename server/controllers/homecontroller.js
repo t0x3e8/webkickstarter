@@ -29,7 +29,7 @@ var homecontroller = (function () {
             if (err) {
                 res.status(404).json(err);
             } else if (response.statusCode === 200) {
-                renderIndex(res, body);                
+                renderIndex(res, body);
             } else if (response.statusCode === 404) {
                 renderIndex(res, []);
             } else {
@@ -52,10 +52,18 @@ var homecontroller = (function () {
     }
 
     var addComment = function (req, res, next) {
+        var author = '';
+
+        if (req.user && req.user.local) {
+            author = req.user.local.username;
+        } else {
+            author = req.body.author;
+        }
+
         request.post(apiAddress + '/posts/' + req.params.postId + '/comments',
             {
                 json: {
-                    author: req.body.author,
+                    author: author,
                     content: req.body.content
                 }
             },
@@ -74,7 +82,7 @@ var homecontroller = (function () {
     var about = function (req, res, next) {
         res.render('homeabout', { title: 'Jenny from the blog' });
     };
-    
+
     return {
         'index': index,
         'about': about,

@@ -93,16 +93,13 @@ describe('TDD for api\\controllers\\postcontroller::', function () {
 
         describe('Need to be able to CREATE a new post::', function () {
             it('should create a new post', sinon.test(function () {
-                var PostMock = this.mock(Post);
-                PostMock
-                    .expects('create')
-                    .once()
-                    .chain('exec')
-                    .yields(null, post2WithoutComments);
+                var saveStub = sinon.stub(Post.prototype, 'save').yields(null, post2WithoutComments);
+
                 req = httpMocks.createRequest({ body: { title: "Post 2", content: "Content of Post 2" } });
 
                 postController.postCreate(req, res, null);
 
+                sinon.assert.calledOnce(saveStub);
                 resData = JSON.parse(res._getData());
                 expect(res).to.not.equal(null && {});
                 expect(res.statusCode).to.be.equal(201);
@@ -110,31 +107,24 @@ describe('TDD for api\\controllers\\postcontroller::', function () {
                 expect(resData.content).to.be.equal("Content of Post 2");
                 expect(resData.date).to.be.equal('2016-12-30T23:33:54.217Z');
                 expect(resData.comments.length).to.be.equal(0);
+                saveStub.restore();
             }));
 
-            it('should return an error when Title is missing', sinon.test(function () {
-                var PostMock = this.mock(Post);
-                PostMock
-                    .expects('create')
-                    .never()
-                    .chain('exec')
-                    .yields(null, null);
+            it('should return an error when Title is missing', sinon.test(function () {                
+                var saveStub = sinon.stub(Post.prototype, 'save').yields(null, null);
                 req = httpMocks.createRequest({ body: { title: undefined, content: undefined } });
 
                 postController.postCreate(req, res, null);
 
+                sinon.assert.notCalled(saveStub);
                 expect(res).to.not.equal(null && {});
                 expect(res.statusCode).to.be.equal(400);
                 expect(res._getData()).to.be.equal('{"error":"Missing request data (Title)"}');
+                saveStub.restore();
             }));
 
             it('should return 500 and an error when an error occurs', sinon.test(function () {
-                var PostMock = this.mock(Post);
-                PostMock
-                    .expects('create')
-                    .once()
-                    .chain('exec')
-                    .yields("Error happened", null);
+                var saveStub = sinon.stub(Post.prototype, 'save').yields("Error happened");
                 req = httpMocks.createRequest({ body: { title: "Post 2", content: "Content of Post 2" } });
 
                 postController.postCreate(req, res, null);
@@ -142,6 +132,7 @@ describe('TDD for api\\controllers\\postcontroller::', function () {
                 expect(res).to.not.equal(null && {});
                 expect(res.statusCode).to.be.equal(500);
                 expect(res._getData()).to.be.equal('{"error":"Error happened"}');
+                saveStub.restore();
             }));
         });
 
